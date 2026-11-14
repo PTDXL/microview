@@ -42,6 +42,10 @@ install -Dpm 0644 %{SOURCE3} %{buildroot}%{_licensedir}/%{name}/LICENSE
 %{_datadir}/applications/microview.desktop
 
 %changelog
+* Sat Nov 14 2026 Ptdxl - 1.4-1
+- No changes to the program on Linux; released together with the first Windows build
+- --selftest also writes its result to selftest.txt
+
 * Sat Nov 14 2026 Ptdxl - 1.3-1
 - Zoom in/out buttons; Zoom 1x is disabled when not zoomed in
 

@@ -1,7 +1,7 @@
 # MicroView
 
-A viewer for USB microscopes on Linux. It works with any microscope that presents itself as a
-standard UVC camera, such as the ones that ship with HiView or AMCap for Windows.
+A viewer for USB microscopes on Linux and Windows. It works with any microscope that presents
+itself as a standard UVC camera, such as the ones that ship with HiView or AMCap.
 
 ![Screenshot](screenshot.png)
 
@@ -17,13 +17,18 @@ standard UVC camera, such as the ones that ship with HiView or AMCap for Windows
 
 The [releases page](https://github.com/ptdxl/microview/releases) has:
 
-- **Portable version** (`MicroView-<version>-linux-x86_64`): a single file containing Python, Qt
-  and FFmpeg. Nothing to install:
+- **Portable version for Linux** (`MicroView-<version>-linux-x86_64`): a single file containing
+  Python, Qt and FFmpeg. Nothing to install:
 
   ```bash
   chmod +x MicroView-*-linux-x86_64
   ./MicroView-*-linux-x86_64
   ```
+
+- **Portable version for Windows** (`MicroView-<version>-windows-x86_64.exe`): the same as a
+  single `.exe`. The file is not code-signed, so Windows SmartScreen warns on the first start;
+  choose "More info" and then "Run anyway". The image controls (brightness, contrast, …) are
+  not available on Windows yet.
 
 - **RPM for Fedora**: installs the `microview` command and a menu entry, and pulls in the
   dependencies itself:
@@ -49,16 +54,18 @@ python3 microview.py
 
 | What | Command | Result |
 |---|---|---|
-| Portable version | `packaging/build-portable.sh` | `dist/MicroView-<version>-linux-x86_64` |
+| Portable version | `packaging/build-portable.sh` | `dist/MicroView-<version>-<system>-x86_64[.exe]` |
 | RPM for Fedora | `packaging/build-rpm.sh` | `dist/microview-<version>-*.noarch.rpm` |
 
 The portable script creates a virtual environment in `build/` and fetches PySide6, imageio-ffmpeg
-and PyInstaller from PyPI. Pushing a tag that starts with `v` (for example `v1.3`) makes GitHub
-Actions build both and attach them to a release; see `.github/workflows/release.yml`.
+and PyInstaller from PyPI. It builds for the system it runs on; on Windows, run it from Git Bash.
+Pushing a tag that starts with `v` (for example `v1.4`) makes GitHub Actions build everything and
+attach it to a release; see `.github/workflows/release.yml`.
 
 To check a build without clicking through it, run it with `--selftest`. That opens the window,
 encodes a short test video with FFmpeg and, if a camera is connected, grabs a frame. Add
-`QT_QPA_PLATFORM=offscreen` on a machine without a display.
+`QT_QPA_PLATFORM=offscreen` on a machine without a display. The Windows build has no console:
+give it a folder (`--selftest C:\some\folder`) and read `selftest.txt` there.
 
 ## Usage
 
@@ -86,9 +93,11 @@ variable `MICROVIEW_LANG=en` or `MICROVIEW_LANG=nl`.
 
 ## Platform notes
 
-- The camera controls (brightness, contrast, …) talk to V4L2 directly and are Linux-only.
-- Windows is not supported yet. The code avoids Linux-only dependencies elsewhere, so a Windows
-  build is possible, but it has not been built or tested.
+- The camera controls (brightness, contrast, …) talk to V4L2 directly and are Linux-only. On
+  Windows the image panel shows "No controls available"; everything else works the same.
+- The portable version for Linux uses the system's font libraries (fontconfig, freetype), which
+  every desktop installation has.
+- The Windows build has been tried with a single microscope on a single PC.
 
 ## Files
 
@@ -98,7 +107,7 @@ variable `MICROVIEW_LANG=en` or `MICROVIEW_LANG=nl`.
 | `microview.svg`, `microview.desktop` | Icon and menu entry |
 | `requirements.txt` | Python dependencies |
 | `install.sh` | Per-user install from source |
-| `packaging/` | Build scripts for the portable version and the RPM package |
+| `packaging/` | Build scripts for the portable version (Linux and Windows) and the RPM package |
 | `.github/workflows/release.yml` | Automated releases |
 
 ## License

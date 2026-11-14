@@ -63,7 +63,7 @@ except ImportError:
     fcntl = None
 
 APP_NAME = "MicroView"
-APP_VERSION = "1.3"
+APP_VERSION = "1.4"
 APP_AUTHOR = "Ptdxl"
 APP_LICENSE = "GPL-3.0-or-later"
 APP_REPO = "https://github.com/ptdxl/microview"
