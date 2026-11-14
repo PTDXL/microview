@@ -17,19 +17,10 @@ if [ -x "$venv/bin/python" ]; then py="$venv/bin/python"; else py="$venv/Scripts
 "$py" -m pip install --quiet --upgrade pip
 "$py" -m pip install --quiet -r "$root/requirements.txt" pyinstaller
 
-case "$(uname -s)" in
-    Linux*) system=linux; ext="" ;;
-    MINGW*|MSYS*|CYGWIN*) system=windows; ext=".exe" ;;
-    *) system="$(uname -s | tr '[:upper:]' '[:lower:]')"; ext="" ;;
-esac
-name="MicroView-$version-$system-$(uname -m)"
-
-"$py" -m PyInstaller --noconfirm --clean --onefile --windowed \
-    --name "$name" \
-    --distpath "$root/dist" --workpath "$root/build/pyinstaller" --specpath "$root/build" \
-    --add-data "$root/microview.svg:." \
-    --collect-all imageio_ffmpeg \
-    "$root/microview.py"
+"$py" -m PyInstaller --noconfirm --clean \
+    --distpath "$root/dist" --workpath "$root/build/pyinstaller" \
+    "$root/packaging/portable.spec"
 
 echo
-echo "Done: $root/dist/$name$ext"
+echo "Done:"
+ls -l "$root/dist"/MicroView-"$version"-*
