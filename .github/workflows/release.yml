@@ -24,11 +24,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # PyInstaller can only bundle libraries that exist on the build machine. Qt Multimedia
+      # needs libpulse and the xcb platform plugin needs libxcb-cursor; the runner has neither.
       - name: Qt libraries to bundle (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 libgl1 libxkbcommon-x11-0 libxcb-cursor0 \
+          sudo apt-get install -y libpulse0 libegl1 libgl1 libxkbcommon-x11-0 libxcb-cursor0 \
             libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-xkb1
       - name: Build portable version
         shell: bash
