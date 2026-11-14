@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f8f9d"/>
+      <stop offset="1" stop-color="#14505c"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="52" fill="url(#bg)"/>
+  <!-- voet -->
+  <rect x="58" y="196" width="140" height="18" rx="9" fill="#ffffff"/>
+  <!-- arm -->
+  <path d="M150 198 C204 176 204 104 152 82" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+  <!-- tafel -->
+  <rect x="70" y="160" width="84" height="12" rx="6" fill="#ffffff"/>
+  <!-- preparaat -->
+  <circle cx="138" cy="160" r="9" fill="#ffd400"/>
+  <!-- tubus, schuin -->
+  <g transform="rotate(-24 128 96)">
+    <rect x="121" y="26" width="26" height="22" rx="5" fill="#ffffff"/>
+    <rect x="114" y="44" width="40" height="78" rx="9" fill="#ffffff"/>
+    <rect x="124" y="118" width="20" height="24" rx="4" fill="#ffffff"/>
+  </g>
+</svg>

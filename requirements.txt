@@ -1,0 +1,4 @@
+# To run MicroView from source: pip install -r requirements.txt
+PySide6>=6.6
+# Ships an FFmpeg for video recording; not needed when 'ffmpeg' is already in PATH.
+imageio-ffmpeg>=0.5

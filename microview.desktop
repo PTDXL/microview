@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=MicroView
+GenericName=USB Microscope Viewer
+GenericName[nl]=Viewer voor USB-microscopen
+Comment=View, capture and measure with a USB microscope
+Comment[nl]=Bekijk, fotografeer en meet met een USB-microscoop
+Exec=microview
+Icon=microview
+Terminal=false
+Categories=Graphics;Viewer;
+Keywords=microscope;microscoop;camera;uvc;
