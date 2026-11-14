@@ -20,6 +20,7 @@ import sys
 import tempfile
 import threading
 import time
+import traceback
 from datetime import datetime
 from pathlib import Path
 
@@ -1271,16 +1272,35 @@ def self_test(app, folder):
     """Checks a build without user interaction: the window, FFmpeg encoding and, if present, the camera.
 
     Run with QT_QPA_PLATFORM=offscreen on a machine without a display. Returns the exit code.
+    The result is printed and also written to selftest.txt in the folder, because the
+    portable build for Windows has no console to print to.
     """
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
+    lines = []
+
+    def report(*parts):
+        lines.append(" ".join(str(part) for part in parts))
+        print(lines[-1])
+
+    try:
+        ok = _self_test_steps(app, folder, report)
+    except Exception:
+        report(traceback.format_exc())
+        ok = False
+    report("self-test:", "passed" if ok else "FAILED")
+    (folder / "selftest.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return 0 if ok else 1
+
+
+def _self_test_steps(app, folder, report):
     window = MainWindow()
     window.out_dir = folder
     window.show()
     ok = True
 
     encoder = find_encoder()
-    print("ffmpeg:", f"{encoder[0]} ({encoder[1]})" if encoder else "not found")
+    report("ffmpeg:", f"{encoder[0]} ({encoder[1]})" if encoder else "not found")
     if encoder:
         exe, name, args = encoder
         frame = QImage(640, 480, QImage.Format.Format_RGB32)
@@ -1292,7 +1312,7 @@ def self_test(app, folder):
         writer.stop()
         writer.wait(60)
         encoded, error = writer.result()
-        print("encode:", "ok" if encoded else f"FAILED: {error}")
+        report("encode:", "ok" if encoded else f"FAILED: {error}")
         ok = ok and encoded
     else:
         ok = False
@@ -1302,18 +1322,17 @@ def self_test(app, folder):
         app.processEvents()
         time.sleep(0.02)
     if window.active_id is None:
-        print("camera: none found")
+        report("camera: none found")
     elif window.view.image is None:
-        print("camera: FAILED, no image from", window.device_path)
+        report("camera: FAILED, no image from", window.device_path)
         ok = False
     else:
         image = window.view.image
         window.take_photo()
-        print(f"camera: {window.device_path} {image.width()}x{image.height()}, "
+        report(f"camera: {window.device_path} {image.width()}x{image.height()}, "
               f"{len(window._ctrl_widgets)} controls")
     window.close()
-    print("self-test:", "passed" if ok else "FAILED")
-    return 0 if ok else 1
+    return ok
 
 
 def main():

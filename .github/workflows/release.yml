@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         # An older Ubuntu keeps the file usable on older distributions.
-        # To add Windows later: os: windows-latest (the build script runs in Git Bash).
-        os: [ubuntu-22.04]
+        # On Windows the build script runs in Git Bash.
+        os: [ubuntu-22.04, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -35,11 +35,17 @@ jobs:
       - name: Build portable version
         shell: bash
         run: packaging/build-portable.sh
+      # The Windows build has no console, so the result is read from the file the test leaves.
       - name: Self-test the portable version (window and FFmpeg; the runner has no camera)
         shell: bash
+        timeout-minutes: 10
         env:
           QT_QPA_PLATFORM: offscreen
-        run: dist/MicroView-* --selftest
+        run: |
+          status=0
+          dist/MicroView-* --selftest selftest-out || status=$?
+          cat selftest-out/selftest.txt
+          exit $status
       - uses: actions/upload-artifact@v4
         with:
           name: portable-${{ matrix.os }}
